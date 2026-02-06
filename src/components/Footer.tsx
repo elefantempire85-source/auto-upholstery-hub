@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   const footerLinks = [
     { name: "Contact Us", path: "/contact" },
-    { name: "Buy Now", path: "/shop" },
+    { name: "Shop", path: "/shop" },
     { name: "About Us", path: "/about" },
   ];
 
@@ -27,7 +27,7 @@ const Footer = () => {
         </div>
         <div className="border-t border-muted-foreground/20 mt-6 pt-6">
           <p className="text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Chevy Upholstery Guy. All rights reserved.
+            © {new Date().getFullYear()} Uptown Upholstery. All rights reserved.
           </p>
         </div>
       </div>

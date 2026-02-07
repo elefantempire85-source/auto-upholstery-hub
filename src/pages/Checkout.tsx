@@ -7,6 +7,7 @@ import CategoryBar from "@/components/CategoryBar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import PaymentMethodSelector, { PaymentMethod } from "@/components/checkout/PaymentMethodSelector";
 
 const Checkout = () => {
   const { items, getCartTotal, clearCart } = useCart();
@@ -23,11 +24,8 @@ const Checkout = () => {
     state: "",
     zipCode: "",
     country: "United States",
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
-    nameOnCard: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("paypal");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -48,8 +46,12 @@ const Checkout = () => {
     // Simulate order processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
+    const orderNumber = `UU-${Date.now().toString(36).toUpperCase()}`;
+    
     clearCart();
-    toast.success("Order placed successfully!");
+    toast.success(`Order ${orderNumber} placed successfully! Please complete payment using ${paymentMethod.toUpperCase()}.`, {
+      duration: 6000,
+    });
     navigate("/");
     setLoading(false);
   };
@@ -210,60 +212,13 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Payment */}
+                {/* Payment Method Selection */}
                 <div className="bg-card border border-border p-6">
-                  <h2 className="font-display text-2xl mb-6">Payment Details</h2>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm mb-2">Name on Card</label>
-                      <input
-                        type="text"
-                        name="nameOnCard"
-                        value={formData.nameOnCard}
-                        onChange={handleChange}
-                        className="contact-input"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-2">Card Number</label>
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleChange}
-                        className="contact-input"
-                        placeholder="1234 5678 9012 3456"
-                        required
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm mb-2">Expiry Date</label>
-                        <input
-                          type="text"
-                          name="expiry"
-                          value={formData.expiry}
-                          onChange={handleChange}
-                          className="contact-input"
-                          placeholder="MM/YY"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm mb-2">CVV</label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={formData.cvv}
-                          onChange={handleChange}
-                          className="contact-input"
-                          placeholder="123"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <h2 className="font-display text-2xl mb-6">Payment Method</h2>
+                  <PaymentMethodSelector
+                    selectedMethod={paymentMethod}
+                    onMethodChange={setPaymentMethod}
+                  />
                 </div>
               </div>
 
@@ -323,6 +278,12 @@ const Checkout = () => {
                       ✓ Free shipping on orders over $500
                     </p>
                   )}
+
+                  <div className="mt-4 p-3 bg-secondary/50 border border-border">
+                    <p className="text-xs text-muted-foreground">
+                      Payment via: <strong className="text-foreground">{paymentMethod.toUpperCase()}</strong>
+                    </p>
+                  </div>
 
                   <button
                     type="submit"

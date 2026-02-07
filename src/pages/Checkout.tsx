@@ -44,16 +44,33 @@ const Checkout = () => {
     setLoading(true);
 
     // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     const orderNumber = `UU-${Date.now().toString(36).toUpperCase()}`;
     
+    // Prepare order data for confirmation page
+    const orderData = {
+      orderNumber,
+      items: items.map((item) => ({
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+      })),
+      subtotal: getCartTotal(),
+      shipping: shippingCost,
+      tax,
+      total,
+      paymentMethod,
+      customerEmail: formData.email,
+      customerName: `${formData.firstName} ${formData.lastName}`,
+      shippingAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
+    };
+    
     clearCart();
-    toast.success(`Order ${orderNumber} placed successfully! Please complete payment using ${paymentMethod.toUpperCase()}.`, {
-      duration: 6000,
-    });
-    navigate("/");
     setLoading(false);
+    
+    // Navigate to confirmation page with order data
+    navigate("/order-confirmation", { state: orderData });
   };
 
   const shippingCost = getCartTotal() > 500 ? 0 : 25;

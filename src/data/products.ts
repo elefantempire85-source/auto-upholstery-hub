@@ -13,6 +13,15 @@ import product11b from "@/assets/product-11b.jpeg";
 import product12 from "@/assets/product-12.jpeg";
 import product13 from "@/assets/product-13.jpeg";
 import product14 from "@/assets/product-14.jpeg";
+import product15a from "@/assets/product-15a.jpeg";
+import product15b from "@/assets/product-15b.jpeg";
+import product15c from "@/assets/product-15c.jpeg";
+import product15d from "@/assets/product-15d.jpeg";
+import product16a from "@/assets/product-16a.jpeg";
+import product16b from "@/assets/product-16b.jpeg";
+import product17 from "@/assets/product-17.jpeg";
+import product18 from "@/assets/product-18.jpeg";
+import product19 from "@/assets/product-19.jpeg";
 
 export interface Product {
   id: string;
@@ -160,6 +169,55 @@ export const products: Product[] = [
     image: product14,
     category: "Seat Covers",
     description: "Vibrant red leather bucket seats with detailed stitching, center console with cupholders, and matching armrest.",
+    inStock: true,
+  },
+  {
+    id: "15",
+    name: "Maroon & Tan Diamond Stitch Complete Kit",
+    price: 2699.99,
+    originalPrice: 3199.99,
+    image: product15a,
+    images: [product15a, product15b, product15c, product15d],
+    category: "Interior Kits",
+    description: "Complete interior package featuring maroon leather with tan diamond stitching. Includes bucket seats, center console, door panels, and dashboard cover.",
+    inStock: true,
+  },
+  {
+    id: "16",
+    name: "Brown & Tan Two-Tone Bucket Seats",
+    price: 1799.99,
+    image: product16a,
+    images: [product16a, product16b],
+    category: "Seat Covers",
+    description: "Elegant two-tone bucket seats with brown outer sections and tan ribbed center inserts. Includes matching center console.",
+    inStock: true,
+  },
+  {
+    id: "17",
+    name: "Turquoise Classic Bucket Seats",
+    price: 1599.99,
+    image: product17,
+    category: "Seat Covers",
+    description: "Retro turquoise leather bucket seats with vertical pleating and chrome trim accents.",
+    inStock: true,
+  },
+  {
+    id: "18",
+    name: "Black & Silver Racing Bucket Seats",
+    price: 1899.99,
+    originalPrice: 2199.99,
+    image: product18,
+    category: "Seat Covers",
+    description: "Sporty black bucket seats with silver racing stripe accents and matching center console with cupholders.",
+    inStock: true,
+  },
+  {
+    id: "19",
+    name: "Tan Diamond Pattern Interior Kit",
+    price: 2299.99,
+    image: product19,
+    category: "Interior Kits",
+    description: "Complete tan leather interior kit with diamond stitch pattern. Includes bucket seats, console, and door panel accents.",
     inStock: true,
   },
 ];

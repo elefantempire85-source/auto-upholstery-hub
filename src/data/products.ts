@@ -22,6 +22,15 @@ import product16b from "@/assets/product-16b.jpeg";
 import product17 from "@/assets/product-17.jpeg";
 import product18 from "@/assets/product-18.jpeg";
 import product19 from "@/assets/product-19.jpeg";
+import product20 from "@/assets/product-20.jpeg";
+import product20b from "@/assets/product-20b.jpeg";
+import product21 from "@/assets/product-21.jpeg";
+import product22 from "@/assets/product-22.jpeg";
+import product22b from "@/assets/product-22b.jpeg";
+import product22c from "@/assets/product-22c.jpeg";
+import product23 from "@/assets/product-23.jpeg";
+import product23b from "@/assets/product-23b.jpeg";
+import product24 from "@/assets/product-24.jpeg";
 
 export interface Product {
   id: string;
@@ -211,16 +220,65 @@ export const products: Product[] = [
     description: "Sporty black bucket seats with silver racing stripe accents and matching center console with cupholders.",
     inStock: true,
   },
-  {
-    id: "19",
-    name: "Tan Diamond Pattern Interior Kit",
-    price: 2299.99,
-    image: product19,
-    category: "Interior Kits",
-    description: "Complete tan leather interior kit with diamond stitch pattern. Includes bucket seats, console, and door panel accents.",
-    inStock: true,
-  },
-];
+   {
+     id: "19",
+     name: "Tan Diamond Pattern Interior Kit",
+     price: 2299.99,
+     image: product19,
+     category: "Interior Kits",
+     description: "Complete tan leather interior kit with diamond stitch pattern. Includes bucket seats, console, and door panel accents.",
+     inStock: true,
+   },
+   {
+     id: "20",
+     name: "Black & Blue Plaid Bench Seat with Console",
+     price: 1499.99,
+     image: product20,
+     images: [product20, product20b],
+     category: "Seat Covers",
+     description: "Classic black and light blue plaid bench seat with matching console and cupholders. Retro-inspired design.",
+     inStock: true,
+   },
+   {
+     id: "21",
+     name: "Red Truck Black & Red Bucket Seats",
+     price: 1799.99,
+     image: product21,
+     category: "Seat Covers",
+     description: "Bold black bucket seats with red stitching accents installed in a classic red truck. High-contrast design.",
+     inStock: true,
+   },
+   {
+     id: "22",
+     name: "Black & Burgundy Ribbed Bucket Seats with Console",
+     price: 1699.99,
+     originalPrice: 1999.99,
+     image: product22,
+     images: [product22, product22b, product22c],
+     category: "Seat Covers",
+     description: "Premium black leather bucket seats with burgundy ribbed inserts and center console with cupholders. Multiple viewing angles.",
+     inStock: true,
+   },
+   {
+     id: "23",
+     name: "Blue & Red Plaid Complete Interior Kit",
+     price: 2199.99,
+     image: product23,
+     images: [product23, product23b],
+     category: "Interior Kits",
+     description: "Complete interior package featuring royal blue leather with red plaid inserts. Includes bucket seats, console, and door panels.",
+     inStock: true,
+   },
+   {
+     id: "24",
+     name: "Light Blue GMC Bucket Seats with Console",
+     price: 1599.99,
+     image: product24,
+     category: "Seat Covers",
+     description: "Classic light blue leather bucket seats with GMC branding and matching console. Retro truck restoration look.",
+     inStock: true,
+   },
+ ];
 
 export const categories = [
   "All Products",

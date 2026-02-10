@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import CategoryBar from "@/components/CategoryBar";
@@ -43,12 +44,8 @@ const Checkout = () => {
 
     setLoading(true);
 
-    // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
     const orderNumber = `UU-${Date.now().toString(36).toUpperCase()}`;
     
-    // Prepare order data for confirmation page
     const orderData = {
       orderNumber,
       items: items.map((item) => ({
@@ -65,11 +62,25 @@ const Checkout = () => {
       customerName: `${formData.firstName} ${formData.lastName}`,
       shippingAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
     };
+
+    // Send automated emails via edge function
+    try {
+      const { data, error } = await supabase.functions.invoke("send-order-email", {
+        body: orderData,
+      });
+      if (error) {
+        console.error("Email send error:", error);
+        toast.error("Order placed but email notification failed. Please contact us directly.");
+      } else {
+        console.log("Order emails sent:", data);
+      }
+    } catch (err) {
+      console.error("Email function error:", err);
+    }
     
     clearCart();
     setLoading(false);
     
-    // Navigate to confirmation page with order data
     navigate("/order-confirmation", { state: orderData });
   };
 

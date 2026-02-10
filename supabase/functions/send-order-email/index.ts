@@ -94,13 +94,10 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="background: #f0fdf4; border: 2px solid #4ade80; padding: 20px; margin: 25px 0; border-radius: 8px;">
-            <h3 style="color: #16a34a; margin-top: 0;">💳 Payment Instructions</h3>
-            <p>Please send <strong>$${order.total.toFixed(2)}</strong> via <strong>${payment.method}</strong> to:</p>
-            <div style="background: #fff; padding: 12px; border: 1px solid #ddd; border-radius: 4px; text-align: center; font-size: 20px; font-weight: bold;">
-              ${payment.handle}
-            </div>
-            <p style="margin-top: 15px; font-size: 14px; color: #666;">
-              <strong>Important:</strong> Include your order number <strong>${order.orderNumber}</strong> in the payment notes.
+            <h3 style="color: #16a34a; margin-top: 0;">💳 Payment Method</h3>
+            <p>You selected <strong>${payment.method}</strong> for this order.</p>
+            <p style="margin-top: 10px; font-size: 14px; color: #666;">
+              Your order number is <strong>${order.orderNumber}</strong>. We will reach out with next steps.
             </p>
           </div>
 

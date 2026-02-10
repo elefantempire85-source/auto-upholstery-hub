@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CheckCircle, Mail, Copy, ExternalLink } from "lucide-react";
+import { CheckCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
@@ -52,53 +52,9 @@ const OrderConfirmation = () => {
 
   const payment = paymentInstructions[orderData.paymentMethod] || paymentInstructions.paypal;
 
-  const generateEmailBody = () => {
-    const itemsList = orderData.items
-      .map((item) => `- ${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`)
-      .join("\n");
-
-    return `
-NEW ORDER - ${orderData.orderNumber}
-
-Customer Information:
-Name: ${orderData.customerName}
-Email: ${orderData.customerEmail}
-
-Shipping Address:
-${orderData.shippingAddress}
-
-Order Details:
-${itemsList}
-
-Subtotal: $${orderData.subtotal.toFixed(2)}
-Shipping: ${orderData.shipping === 0 ? "FREE" : `$${orderData.shipping.toFixed(2)}`}
-Tax (8%): $${orderData.tax.toFixed(2)}
-Total: $${orderData.total.toFixed(2)}
-
-Payment Method: ${payment.method}
-Payment Handle: ${payment.handle}
-
-Status: Awaiting Payment
-
----
-UPTOWN UPHOLSTERY
-Eugene, WA, US
-+1 (571) 563-7724
-    `.trim();
-  };
-
-  const emailSubject = `New Order: ${orderData.orderNumber} - $${orderData.total.toFixed(2)}`;
-  const emailBody = generateEmailBody();
-  const mailtoLink = `mailto:uphosteryuptown@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-  const copyOrderDetails = () => {
-    navigator.clipboard.writeText(emailBody);
-    toast.success("Order details copied to clipboard!");
-  };
-
-  const openEmailClient = () => {
-    window.location.href = mailtoLink;
-    toast.info("Opening your email client...");
+  const copyPaymentHandle = () => {
+    navigator.clipboard.writeText(payment.handle);
+    toast.success("Payment handle copied to clipboard!");
   };
 
   return (
@@ -174,33 +130,20 @@ Eugene, WA, US
             </p>
           </div>
 
-          {/* Send Order Email */}
-          <div className="bg-card border border-border p-6 mb-8">
-            <h3 className="font-display text-xl mb-4">Send Order to Business</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Click below to send your order details to our business email. This ensures we have all the information to
-              process your order quickly.
+          {/* Email Confirmation Notice */}
+          <div className="bg-card border border-border p-6 mb-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              📧 A confirmation email with payment instructions has been sent to <strong>{orderData.customerEmail}</strong>
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button onClick={openEmailClient} className="flex-1 gap-2">
-                <Mail className="w-4 h-4" />
-                Send Order Email
-                <ExternalLink className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" onClick={copyOrderDetails} className="flex-1 gap-2">
-                <Copy className="w-4 h-4" />
-                Copy Order Details
-              </Button>
-            </div>
           </div>
 
           {/* Next Steps */}
           <div className="bg-secondary p-6 mb-8">
             <h3 className="font-display text-xl mb-4">What Happens Next?</h3>
             <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+              <li>Check your email for payment instructions</li>
               <li>Send the payment amount using your selected payment method</li>
               <li>Include your order number in the payment notes</li>
-              <li>Click "Send Order Email" above to notify us of your order</li>
               <li>We'll confirm your payment and begin processing your order</li>
               <li>You'll receive shipping confirmation with tracking details</li>
             </ol>

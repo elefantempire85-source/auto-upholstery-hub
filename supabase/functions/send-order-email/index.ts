@@ -9,13 +9,6 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const paymentInstructions: Record<string, { handle: string; method: string }> = {
-  paypal: { handle: "uptownupholstery@paypal.com", method: "PayPal" },
-  cashapp: { handle: "$UptownUpholstery", method: "Cash App" },
-  zelle: { handle: "uptownupholstery@zelle.com", method: "Zelle" },
-  venmo: { handle: "@UptownUpholstery", method: "Venmo" },
-};
-
 interface OrderItem {
   name: string;
   quantity: number;
@@ -29,7 +22,6 @@ interface OrderRequest {
   shipping: number;
   tax: number;
   total: number;
-  paymentMethod: string;
   customerEmail: string;
   customerName: string;
   shippingAddress: string;
@@ -42,7 +34,6 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const order: OrderRequest = await req.json();
-    const payment = paymentInstructions[order.paymentMethod] || paymentInstructions.paypal;
 
     const itemsHtml = order.items
       .map(
@@ -55,7 +46,7 @@ const handler = async (req: Request): Promise<Response> => {
       )
       .join("");
 
-    // Email to customer with payment instructions
+    // Email to customer
     const customerEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
         <div style="background: #1a1a1a; padding: 20px; text-align: center;">
@@ -65,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
         
         <div style="padding: 30px 20px;">
           <p>Hi ${order.customerName},</p>
-          <p>Thank you for your order! Here are your order details and payment instructions.</p>
+          <p>Thank you for your order! Here are your order details.</p>
           
           <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-left: 4px solid #4ade80;">
             <p style="margin: 0;"><strong>Order Number:</strong> ${order.orderNumber}</p>
@@ -94,10 +85,10 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="background: #f0fdf4; border: 2px solid #4ade80; padding: 20px; margin: 25px 0; border-radius: 8px;">
-            <h3 style="color: #16a34a; margin-top: 0;">💳 Payment Method</h3>
-            <p>You selected <strong>${payment.method}</strong> for this order.</p>
+            <h3 style="color: #16a34a; margin-top: 0;">💳 Payment</h3>
+            <p>We will reach out to you shortly with payment instructions for your order.</p>
             <p style="margin-top: 10px; font-size: 14px; color: #666;">
-              Your order number is <strong>${order.orderNumber}</strong>. We will reach out with next steps.
+              Your order number is <strong>${order.orderNumber}</strong>.
             </p>
           </div>
 
@@ -115,7 +106,7 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Email to business with order notification
+    // Email to business
     const businessEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
         <div style="background: #1a1a1a; padding: 20px; text-align: center;">
@@ -126,7 +117,6 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="padding: 20px;">
           <div style="background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
             <p style="margin: 0; font-size: 18px;"><strong>Total: $${order.total.toFixed(2)}</strong></p>
-            <p style="margin: 5px 0 0;">Payment: ${payment.method} → ${payment.handle}</p>
             <p style="margin: 5px 0 0; color: #b45309;"><strong>Status: Awaiting Payment</strong></p>
           </div>
 
@@ -157,7 +147,6 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Send both emails in parallel
     const [customerResult, businessResult] = await Promise.all([
       resend.emails.send({
         from: "Uptown Upholstery <onboarding@resend.dev>",

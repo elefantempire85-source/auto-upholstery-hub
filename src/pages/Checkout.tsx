@@ -8,7 +8,7 @@ import CategoryBar from "@/components/CategoryBar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import PaymentMethodSelector, { PaymentMethod } from "@/components/checkout/PaymentMethodSelector";
+
 
 const Checkout = () => {
   const { items, getCartTotal, clearCart } = useCart();
@@ -26,7 +26,6 @@ const Checkout = () => {
     zipCode: "",
     country: "United States",
   });
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("paypal");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,7 +56,6 @@ const Checkout = () => {
       shipping: shippingCost,
       tax,
       total,
-      paymentMethod,
       customerEmail: formData.email,
       customerName: `${formData.firstName} ${formData.lastName}`,
       shippingAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
@@ -252,14 +250,6 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Payment Method Selection */}
-                <div className="bg-card border border-border p-6">
-                  <h2 className="font-display text-2xl mb-6">Payment Method</h2>
-                  <PaymentMethodSelector
-                    selectedMethod={paymentMethod}
-                    onMethodChange={setPaymentMethod}
-                  />
-                </div>
               </div>
 
               {/* Order Summary */}
@@ -318,12 +308,6 @@ const Checkout = () => {
                       ✓ Free shipping on orders over $500
                     </p>
                   )}
-
-                  <div className="mt-4 p-3 bg-secondary/50 border border-border">
-                    <p className="text-xs text-muted-foreground">
-                      Payment via: <strong className="text-foreground">{paymentMethod.toUpperCase()}</strong>
-                    </p>
-                  </div>
 
                   <button
                     type="submit"

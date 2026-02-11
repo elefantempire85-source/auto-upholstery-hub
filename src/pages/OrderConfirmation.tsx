@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CheckCircle, Copy } from "lucide-react";
-import { toast } from "sonner";
+import { CheckCircle } from "lucide-react";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import CategoryBar from "@/components/CategoryBar";
@@ -19,18 +18,10 @@ interface OrderData {
   shipping: number;
   tax: number;
   total: number;
-  paymentMethod: string;
   customerEmail: string;
   customerName: string;
   shippingAddress: string;
 }
-
-const paymentInstructions: Record<string, { handle: string; method: string }> = {
-  paypal: { handle: "uptownupholstery@paypal.com", method: "PayPal" },
-  cashapp: { handle: "$UptownUpholstery", method: "Cash App" },
-  zelle: { handle: "uptownupholstery@zelle.com", method: "Zelle" },
-  venmo: { handle: "@UptownUpholstery", method: "Venmo" },
-};
 
 const OrderConfirmation = () => {
   const navigate = useNavigate();
@@ -50,13 +41,6 @@ const OrderConfirmation = () => {
     return null;
   }
 
-  const payment = paymentInstructions[orderData.paymentMethod] || paymentInstructions.paypal;
-
-  const copyPaymentHandle = () => {
-    navigator.clipboard.writeText(payment.handle);
-    toast.success("Payment handle copied to clipboard!");
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <AnnouncementBar />
@@ -69,7 +53,7 @@ const OrderConfirmation = () => {
             <CheckCircle className="w-20 h-20 text-brand-green mx-auto mb-6" />
             <h1 className="font-display text-4xl md:text-5xl mb-4">Order Placed!</h1>
             <p className="text-muted-foreground text-lg">
-              Thank you for your order. Please complete payment to process your order.
+              Thank you for your order. We'll send you payment instructions shortly.
             </p>
           </div>
 
@@ -112,24 +96,6 @@ const OrderConfirmation = () => {
             </div>
           </div>
 
-          {/* Payment Instructions */}
-          <div className="bg-brand-green/10 border-2 border-brand-green p-6 mb-8">
-            <h2 className="font-display text-2xl mb-4 text-brand-green">Complete Your Payment</h2>
-            <p className="mb-4">
-              Your order will be processed once we receive your payment. Please send{" "}
-              <strong className="text-brand-green">${orderData.total.toFixed(2)}</strong> using{" "}
-              <strong>{payment.method}</strong>:
-            </p>
-            <div className="bg-card border border-border p-4 mb-4">
-              <p className="text-sm text-muted-foreground mb-1">Send payment to:</p>
-              <p className="font-display text-xl">{payment.handle}</p>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <strong>Important:</strong> Include your order number <strong>{orderData.orderNumber}</strong> in the
-              payment notes/description.
-            </p>
-          </div>
-
           {/* Email Confirmation Notice */}
           <div className="bg-card border border-border p-6 mb-8 text-center">
             <p className="text-sm text-muted-foreground">
@@ -142,8 +108,7 @@ const OrderConfirmation = () => {
             <h3 className="font-display text-xl mb-4">What Happens Next?</h3>
             <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
               <li>Check your email for payment instructions</li>
-              <li>Send the payment amount using your selected payment method</li>
-              <li>Include your order number in the payment notes</li>
+              <li>Follow the payment instructions we send you</li>
               <li>We'll confirm your payment and begin processing your order</li>
               <li>You'll receive shipping confirmation with tracking details</li>
             </ol>

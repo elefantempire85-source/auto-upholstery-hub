@@ -53,7 +53,7 @@ const OrderConfirmation = () => {
             <CheckCircle className="w-20 h-20 text-brand-green mx-auto mb-6" />
             <h1 className="font-display text-4xl md:text-5xl mb-4">Order Placed!</h1>
             <p className="text-muted-foreground text-lg">
-              Thank you for your order. We'll send you payment instructions shortly.
+              Your order has been successfully placed and you will receive further instructions through email.
             </p>
           </div>
 
@@ -94,24 +94,6 @@ const OrderConfirmation = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Email Confirmation Notice */}
-          <div className="bg-card border border-border p-6 mb-8 text-center">
-            <p className="text-sm text-muted-foreground">
-              📧 A confirmation email with payment instructions has been sent to <strong>{orderData.customerEmail}</strong>
-            </p>
-          </div>
-
-          {/* Next Steps */}
-          <div className="bg-secondary p-6 mb-8">
-            <h3 className="font-display text-xl mb-4">What Happens Next?</h3>
-            <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-              <li>Check your email for payment instructions</li>
-              <li>Follow the payment instructions we send you</li>
-              <li>We'll confirm your payment and begin processing your order</li>
-              <li>You'll receive shipping confirmation with tracking details</li>
-            </ol>
           </div>
 
           <div className="text-center">

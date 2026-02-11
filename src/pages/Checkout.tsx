@@ -89,9 +89,9 @@ const Checkout = () => {
     const local = ["or", "oregon", "wa", "washington", "ca", "california", "nv", "nevada", "id", "idaho"];
     // Central US
     const mid = ["az", "arizona", "ut", "utah", "mt", "montana", "co", "colorado", "wy", "wyoming", "nm", "new mexico", "tx", "texas", "nd", "north dakota", "sd", "south dakota", "ne", "nebraska", "ks", "kansas", "ok", "oklahoma", "mn", "minnesota", "ia", "iowa", "mo", "missouri", "ar", "arkansas", "la", "louisiana", "wi", "wisconsin", "il", "illinois", "in", "indiana", "mi", "michigan", "oh", "ohio"];
-    if (local.includes(state)) return 25;
-    if (mid.includes(state)) return 75;
-    return 150; // East Coast & others
+    if (local.includes(state)) return 75;
+    if (mid.includes(state)) return 110;
+    return 145; // East Coast & others
   };
 
   const shippingCost = getShippingCost();

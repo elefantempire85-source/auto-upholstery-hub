@@ -1,7 +1,6 @@
+/// <reference path="./deno.d.ts" />
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,6 +24,16 @@ interface OrderRequest {
   customerEmail: string;
   customerName: string;
   shippingAddress: string;
+  paymentMethod?: string;
+  paymentMethodLabel?: string;
+  paymentInstructions?: string;
+}
+
+function jsonResponse(body: object, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -32,8 +41,30 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey?.trim()) {
+    return jsonResponse(
+      { error: "RESEND_API_KEY is not set. Add it in Supabase Edge Function secrets." },
+      500
+    );
+  }
+
+  const resend = new Resend(apiKey);
+
+  const fromEmail = Deno.env.get("RESEND_FROM_EMAIL")?.trim() || "onboarding@resend.dev";
+  const fromName = Deno.env.get("RESEND_FROM_NAME")?.trim() || "Uptown Upholstery";
+  const from = `${fromName} <${fromEmail}>`;
+  const businessTo = Deno.env.get("ORDER_NOTIFICATION_EMAIL")?.trim() || "upholsteryuptown@gmail.com";
+
   try {
     const order: OrderRequest = await req.json();
+
+    if (!order.orderNumber || !order.customerEmail || !order.items?.length || order.total == null) {
+      return jsonResponse(
+        { error: "Invalid order: missing orderNumber, customerEmail, items, or total." },
+        400
+      );
+    }
 
     const itemsHtml = order.items
       .map(
@@ -46,68 +77,12 @@ const handler = async (req: Request): Promise<Response> => {
       )
       .join("");
 
-    // Email to customer
-    const customerEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-        <div style="background: #1a1a1a; padding: 20px; text-align: center;">
-          <h1 style="color: #fff; margin: 0; font-size: 24px;">UPTOWN UPHOLSTERY</h1>
-          <p style="color: #4ade80; margin: 5px 0 0;">Order Confirmation</p>
-        </div>
-        
-        <div style="padding: 30px 20px;">
-          <p>Hi ${order.customerName},</p>
-          <p>Thank you for your order! Here are your order details.</p>
-          
-          <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-left: 4px solid #4ade80;">
-            <p style="margin: 0;"><strong>Order Number:</strong> ${order.orderNumber}</p>
-            <p style="margin: 5px 0 0;"><strong>Total:</strong> $${order.total.toFixed(2)}</p>
-          </div>
+    const paymentLabel = order.paymentMethodLabel || "Payment";
+    const paymentInstructions = order.paymentInstructions || "";
+    const hasPaymentDetails = !!paymentInstructions.trim();
 
-          <h3>Order Items</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: #f0f0f0;">
-                <th style="padding: 8px; text-align: left;">Item</th>
-                <th style="padding: 8px; text-align: center;">Qty</th>
-                <th style="padding: 8px; text-align: right;">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHtml}
-            </tbody>
-          </table>
-          
-          <div style="margin-top: 15px; text-align: right;">
-            <p style="margin: 3px 0;">Subtotal: $${order.subtotal.toFixed(2)}</p>
-            <p style="margin: 3px 0;">Shipping: ${order.shipping === 0 ? "FREE" : `$${order.shipping.toFixed(2)}`}</p>
-            <p style="margin: 3px 0;">Tax (8%): $${order.tax.toFixed(2)}</p>
-            <p style="margin: 3px 0; font-size: 18px;"><strong>Total: $${order.total.toFixed(2)}</strong></p>
-          </div>
-
-          <div style="background: #f0fdf4; border: 2px solid #4ade80; padding: 20px; margin: 25px 0; border-radius: 8px;">
-            <h3 style="color: #16a34a; margin-top: 0;">💳 Payment</h3>
-            <p>We will reach out to you shortly with payment instructions for your order.</p>
-            <p style="margin-top: 10px; font-size: 14px; color: #666;">
-              Your order number is <strong>${order.orderNumber}</strong>.
-            </p>
-          </div>
-
-          <h3>Shipping Address</h3>
-          <p>${order.shippingAddress}</p>
-
-          <p style="margin-top: 30px; color: #666; font-size: 14px;">
-            If you have questions, contact us at <a href="mailto:uphosteryuptown@gmail.com">uphosteryuptown@gmail.com</a> or call +1 (571) 563-7724.
-          </p>
-        </div>
-        
-        <div style="background: #1a1a1a; padding: 15px; text-align: center; color: #999; font-size: 12px;">
-          <p style="margin: 0;">UPTOWN UPHOLSTERY • Eugene, WA, US</p>
-        </div>
-      </div>
-    `;
-
-    // Email to business
-    const businessEmailHtml = `
+    // Send order details only to business (upholsteryuptown@gmail.com); no customer email
+    const orderDetailsHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
         <div style="background: #1a1a1a; padding: 20px; text-align: center;">
           <h1 style="color: #fff; margin: 0;">🛒 NEW ORDER</h1>
@@ -117,6 +92,8 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="padding: 20px;">
           <div style="background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
             <p style="margin: 0; font-size: 18px;"><strong>Total: $${order.total.toFixed(2)}</strong></p>
+            <p style="margin: 5px 0 0; color: #b45309;"><strong>Payment method: ${paymentLabel}</strong></p>
+            ${hasPaymentDetails ? `<p style="margin: 5px 0 0; font-size: 14px;">${paymentInstructions}</p>` : ""}
             <p style="margin: 5px 0 0; color: #b45309;"><strong>Status: Awaiting Payment</strong></p>
           </div>
 
@@ -147,34 +124,22 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    const [customerResult, businessResult] = await Promise.all([
-      resend.emails.send({
-        from: "Uptown Upholstery <onboarding@resend.dev>",
-        to: [order.customerEmail],
-        subject: `Order Confirmation - ${order.orderNumber}`,
-        html: customerEmailHtml,
-      }),
-      resend.emails.send({
-        from: "Uptown Upholstery <onboarding@resend.dev>",
-        to: ["uphosteryuptown@gmail.com"],
-        subject: `New Order: ${order.orderNumber} - $${order.total.toFixed(2)} - ${order.customerName}`,
-        html: businessEmailHtml,
-      }),
-    ]);
+    const result = await resend.emails.send({
+      from,
+      to: [businessTo],
+      subject: `New Order: ${order.orderNumber} - $${order.total.toFixed(2)} - ${order.customerName}`,
+      html: orderDetailsHtml,
+    });
 
-    console.log("Customer email:", customerResult);
-    console.log("Business email:", businessResult);
+    console.log("Order details email:", result);
 
-    return new Response(
-      JSON.stringify({ success: true, customerEmail: customerResult, businessEmail: businessResult }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    return jsonResponse({
+      success: true,
+      email: result,
+    }, 200);
   } catch (error: any) {
     console.error("Error sending order emails:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    return jsonResponse({ error: error.message }, 500);
   }
 };
 

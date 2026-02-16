@@ -7,7 +7,7 @@ interface PaymentMethodSelectorProps {
   onMethodChange: (method: PaymentMethod) => void;
 }
 
-const paymentMethods = [
+export const paymentMethods = [
   {
     id: "paypal" as PaymentMethod,
     name: "PayPal",
@@ -37,6 +37,11 @@ const paymentMethods = [
     instructions: "Send payment to: @UptownUpholstery",
   },
 ];
+
+export function getPaymentMethodInfo(method: PaymentMethod) {
+  const info = paymentMethods.find((m) => m.id === method);
+  return info ? { name: info.name, instructions: info.instructions } : null;
+}
 
 const PaymentMethodSelector = ({
   selectedMethod,

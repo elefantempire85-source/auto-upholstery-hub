@@ -8,13 +8,17 @@ import CategoryBar from "@/components/CategoryBar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-
+import PaymentMethodSelector, {
+  type PaymentMethod,
+  getPaymentMethodInfo,
+} from "@/components/checkout/PaymentMethodSelector";
 
 const Checkout = () => {
   const { items, getCartTotal, clearCart } = useCart();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-  
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>("paypal");
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -45,6 +49,7 @@ const Checkout = () => {
 
     const orderNumber = `UU-${Date.now().toString(36).toUpperCase()}`;
     
+    const paymentInfo = getPaymentMethodInfo(selectedPaymentMethod);
     const orderData = {
       orderNumber,
       items: items.map((item) => ({
@@ -59,6 +64,9 @@ const Checkout = () => {
       customerEmail: formData.email,
       customerName: `${formData.firstName} ${formData.lastName}`,
       shippingAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
+      paymentMethod: selectedPaymentMethod,
+      paymentMethodLabel: paymentInfo?.name ?? "PayPal",
+      paymentInstructions: paymentInfo?.instructions ?? "",
     };
 
     // Send automated emails via edge function
@@ -250,6 +258,13 @@ const Checkout = () => {
                   </div>
                 </div>
 
+                {/* Payment Method */}
+                <div className="bg-card border border-border p-6">
+                  <PaymentMethodSelector
+                    selectedMethod={selectedPaymentMethod}
+                    onMethodChange={setSelectedPaymentMethod}
+                  />
+                </div>
               </div>
 
               {/* Order Summary */}

@@ -1,6 +1,5 @@
 /// <reference path="./deno.d.ts" />
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 import { corsHeaders } from "../_shared/cors.ts";
 
 interface OrderItem {
@@ -32,7 +31,7 @@ function jsonResponse(body: object, status: number) {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Required for browser CORS preflight; Supabase recommends returning body "ok"
+  // Required for browser CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
@@ -40,12 +39,10 @@ const handler = async (req: Request): Promise<Response> => {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey?.trim()) {
     return jsonResponse(
-      { error: "RESEND_API_KEY is not set. Add it in Supabase Edge Function secrets." },
+      { error: "RESEND_API_KEY is not set." },
       500
     );
   }
-
-  const resend = new Resend(apiKey);
 
   const fromEmail = Deno.env.get("RESEND_FROM_EMAIL")?.trim() || "onboarding@resend.dev";
   const fromName = Deno.env.get("RESEND_FROM_NAME")?.trim() || "Uptown Upholstery";
@@ -77,7 +74,6 @@ const handler = async (req: Request): Promise<Response> => {
     const paymentInstructions = order.paymentInstructions || "";
     const hasPaymentDetails = !!paymentInstructions.trim();
 
-    // Send order details only to business (upholsteryuptown@gmail.com); no customer email
     const orderDetailsHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
         <div style="background: #1a1a1a; padding: 20px; text-align: center;">
@@ -120,21 +116,31 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    const result = await resend.emails.send({
-      from,
-      to: [businessTo],
-      subject: `New Order: ${order.orderNumber} - $${order.total.toFixed(2)} - ${order.customerName}`,
-      html: orderDetailsHtml,
+    // Use fetch directly to call Resend API (avoids npm package resolution issues)
+    const resendRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [businessTo],
+        subject: `New Order: ${order.orderNumber} - $${order.total.toFixed(2)} - ${order.customerName}`,
+        html: orderDetailsHtml,
+      }),
     });
 
-    console.log("Order details email:", result);
+    const resendData = await resendRes.json();
+    console.log("Resend response:", JSON.stringify(resendData));
 
-    return jsonResponse({
-      success: true,
-      email: result,
-    }, 200);
+    if (!resendRes.ok) {
+      return jsonResponse({ error: "Failed to send email", details: resendData }, 500);
+    }
+
+    return jsonResponse({ success: true, email: resendData }, 200);
   } catch (error: any) {
-    console.error("Error sending order emails:", error);
+    console.error("Error sending order email:", error);
     return jsonResponse({ error: error.message }, 500);
   }
 };

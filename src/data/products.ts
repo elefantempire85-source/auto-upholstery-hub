@@ -31,6 +31,16 @@ import product22c from "@/assets/product-22c.jpeg";
 import product23 from "@/assets/product-23.jpeg";
 import product23b from "@/assets/product-23b.jpeg";
 import product24 from "@/assets/product-24.jpeg";
+import product25 from "@/assets/product-25.jpeg";
+import product26 from "@/assets/product-26.jpeg";
+import product27 from "@/assets/product-27.jpeg";
+import product28 from "@/assets/product-28.jpeg";
+import product29 from "@/assets/product-29.jpeg";
+import product30 from "@/assets/product-30.jpeg";
+import product31 from "@/assets/product-31.jpeg";
+import product32 from "@/assets/product-32.jpeg";
+import product33 from "@/assets/product-33.jpeg";
+import product34 from "@/assets/product-34.jpeg";
 
 export interface Product {
   id: string;
@@ -277,8 +287,98 @@ export const products: Product[] = [
      category: "Seat Covers",
      description: "Classic light blue leather bucket seats with GMC branding and matching console. Retro truck restoration look.",
      inStock: true,
-   },
- ];
+    },
+    {
+      id: "25",
+      name: "Tan & Blue Plaid Bucket Seats with Console",
+      price: 1795.95,
+      image: product25,
+      category: "Seat Covers",
+      description: "Premium tan leather bucket seats with blue and red plaid diamond inserts and matching center console with cupholders.",
+      inStock: true,
+    },
+    {
+      id: "26",
+      name: "Green & Tan Two-Tone Center Console",
+      price: 549.45,
+      image: product26,
+      category: "Accessories",
+      description: "Custom two-tone center console in forest green and tan leather with dual stainless steel cupholders and padded armrest.",
+      inStock: true,
+    },
+    {
+      id: "27",
+      name: "Black & Tan Diamond Stitch Bucket Seats",
+      price: 1695.95,
+      image: product27,
+      category: "Seat Covers",
+      description: "Elegant black leather bucket seats with tan diamond-stitched center inserts and matching center console.",
+      inStock: true,
+    },
+    {
+      id: "28",
+      name: "Hot Pink Custom Bucket Seats with Console",
+      price: 1895.45,
+      image: product28,
+      category: "Seat Covers",
+      description: "Bold hot pink leather bucket seats with detailed stitching and matching center console with cupholders. Eye-catching custom build.",
+      inStock: true,
+    },
+    {
+      id: "29",
+      name: "Red Premium Bucket Seats with Armrest",
+      price: 1745.95,
+      image: product29,
+      category: "Seat Covers",
+      description: "Vibrant red leather bucket seats with chevron stitching, matching center console with cupholders, and coordinating armrest piece.",
+      inStock: true,
+    },
+    {
+      id: "30",
+      name: "Navy Blue Bucket Seats with Console",
+      price: 1595.45,
+      image: product30,
+      category: "Seat Covers",
+      description: "Classic navy blue leather bucket seats with ribbed stitching detail and matching center console with dual cupholders.",
+      inStock: true,
+    },
+    {
+      id: "31",
+      name: "Cognac & Black Bench Seat with Dashboard Kit",
+      price: 2495.95,
+      image: product31,
+      category: "Interior Kits",
+      description: "Premium cognac leather bench seat with black ribbed accents, matching dashboard cover with brushed metal trim, and coordinating door panels.",
+      inStock: true,
+    },
+    {
+      id: "32",
+      name: "Royal Blue Plaid Bucket Seats with Console",
+      price: 1845.45,
+      image: product32,
+      category: "Seat Covers",
+      description: "Stunning royal blue bucket seats with multi-tone blue plaid inserts, wing emblems, and matching center console with cupholders.",
+      inStock: true,
+    },
+    {
+      id: "33",
+      name: "Black & Burgundy Ribbed Bucket Seats",
+      price: 1645.95,
+      image: product33,
+      category: "Seat Covers",
+      description: "Premium black leather bucket seats with burgundy ribbed center inserts and matching center console with dual cupholders.",
+      inStock: true,
+    },
+    {
+      id: "34",
+      name: "Cognac Complete Interior Package",
+      price: 2895.45,
+      image: product34,
+      category: "Interior Kits",
+      description: "Complete cognac leather interior package including bucket seats with console, dashboard cover, and door panels with black accent inserts.",
+      inStock: true,
+    },
+  ];
 
 export const categories = [
   "All Products",

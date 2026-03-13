@@ -31,6 +31,16 @@ import product22c from "@/assets/product-22c.jpeg";
 import product23 from "@/assets/product-23.jpeg";
 import product23b from "@/assets/product-23b.jpeg";
 import product24 from "@/assets/product-24.jpeg";
+import product25 from "@/assets/product-25.jpeg";
+import product26 from "@/assets/product-26.jpeg";
+import product27 from "@/assets/product-27.jpeg";
+import product28 from "@/assets/product-28.jpeg";
+import product29 from "@/assets/product-29.jpeg";
+import product30 from "@/assets/product-30.jpeg";
+import product31 from "@/assets/product-31.jpeg";
+import product32 from "@/assets/product-32.jpeg";
+import product33 from "@/assets/product-33.jpeg";
+import product34 from "@/assets/product-34.jpeg";
 
 export interface Product {
   id: string;

@@ -41,6 +41,15 @@ import product31 from "@/assets/product-31.jpeg";
 import product32 from "@/assets/product-32.jpeg";
 import product33 from "@/assets/product-33.jpeg";
 import product34 from "@/assets/product-34.jpeg";
+import product35 from "@/assets/product-35.jpeg";
+import product36 from "@/assets/product-36.jpeg";
+import product37 from "@/assets/product-37.jpeg";
+import product38a from "@/assets/product-38a.jpeg";
+import product38b from "@/assets/product-38b.jpeg";
+import product39 from "@/assets/product-39.jpeg";
+import product40 from "@/assets/product-40.jpeg";
+import product41 from "@/assets/product-41.jpeg";
+import product42 from "@/assets/product-42.jpeg";
 
 export interface Product {
   id: string;
@@ -376,6 +385,79 @@ export const products: Product[] = [
       image: product34,
       category: "Interior Kits",
       description: "Complete cognac leather interior package including bucket seats with console, dashboard cover, and door panels with black accent inserts.",
+      inStock: true,
+    },
+    {
+      id: "35",
+      name: "Black & Red Stitch Bucket Seats with Console",
+      price: 1745.95,
+      image: product35,
+      category: "Seat Covers",
+      description: "Sleek black leather bucket seats with red contrast stitching throughout and matching center console with red base accent and dual cupholders.",
+      inStock: true,
+    },
+    {
+      id: "36",
+      name: "Navy Blue Complete Interior Package",
+      price: 2695.45,
+      image: product36,
+      category: "Interior Kits",
+      description: "Complete navy blue leather interior package including bucket seats with console, dashboard cover, and door panels. Full restoration kit.",
+      inStock: true,
+    },
+    {
+      id: "37",
+      name: "Black & Cognac Two-Tone Bucket Seats",
+      price: 1695.95,
+      image: product37,
+      category: "Seat Covers",
+      description: "Premium two-tone bucket seats with black outer leather and cognac center inserts, wing emblems, and matching center console.",
+      inStock: true,
+    },
+    {
+      id: "38",
+      name: "Black Diamond Stitch Interior Kit with Red Accent",
+      price: 2895.45,
+      image: product38a,
+      images: [product38a, product38b],
+      category: "Interior Kits",
+      description: "Complete black leather interior kit with diamond stitching and red accent threading. Includes bench seat, door panels, dashboard, and kick panels.",
+      inStock: true,
+    },
+    {
+      id: "39",
+      name: "Red Custom Bucket Seats with Console",
+      price: 1595.95,
+      image: product39,
+      category: "Seat Covers",
+      description: "Vibrant red leather bucket seats with textured mesh headrest inserts and matching center console with cupholders.",
+      inStock: true,
+    },
+    {
+      id: "40",
+      name: "Custom Speaker Panel with Subwoofer",
+      price: 895.45,
+      image: product40,
+      category: "Accessories",
+      description: "Custom upholstered rear speaker panel with integrated Rockford Fosgate subwoofer and honeycomb speaker grilles.",
+      inStock: true,
+    },
+    {
+      id: "41",
+      name: "Olive Green Storage Console Box",
+      price: 449.95,
+      image: product41,
+      category: "Accessories",
+      description: "Custom olive green leather-wrapped storage console with hinged lid and felt-lined interior compartment.",
+      inStock: true,
+    },
+    {
+      id: "42",
+      name: "Cognac & Black Bench Seat with Dashboard",
+      price: 2545.45,
+      image: product42,
+      category: "Interior Kits",
+      description: "Premium cognac leather bench seat with black ribbed inserts, matching dashboard cover with brushed metal trim panel.",
       inStock: true,
     },
   ];

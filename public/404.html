@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script>
-      const path = window.location.pathname;
-      sessionStorage.redirect = path;
-      window.location.replace("/");
+      const repo = "/auto-upholstery-hub";
+      const path = window.location.pathname.replace(repo, "");
+      sessionStorage.setItem("redirect", path);
+      window.location.replace(repo + "/");
     </script>
   </head>
 </html>
